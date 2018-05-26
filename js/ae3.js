@@ -2,14 +2,39 @@ const addRectangle = document.getElementById('addRectangle');
 const fillCanvas = document.getElementById('fillCanvas');
 const canvas = document.getElementById('myCanvas');
 
+let xArray = [];
+let yArray = [];
+
+for(let i = 0; i <= 1500; i++){
+    xArray[i] = i;
+}
+for(let i = 0; i <= 600; i++){
+    yArray[i] = i;
+}
+//var item = xArray[Math.floor(Math.random()*xArray.length)];
+
 addRectangle.addEventListener('click', ()=>{
     let ctx = canvas.getContext('2d');
+    let x;
+    let y;
+    let width;
+    let height;
+    //generating random parameters for rectangle
+    do {
+        y = yArray[Math.floor(Math.random() * yArray.length)];
+        x = xArray[Math.floor(Math.random() * xArray.length)];
+        width = Math.floor(Math.random() * (1500 - x) + 1);
+        height = Math.floor(Math.random() * (600 - y) + 1);
+    }while(y === false || x === false);
 
-    //random parameters for rectangle
-    let y = Math.floor(Math.random() * 600);
-    let x = Math.floor(Math.random() * 1500);
-    let width = Math.floor(Math.random() * 1500);
-    let height = Math.floor(Math.random() * 650);
+    console.log("x: " + x + " y: " + y + " width: " + width + " height: " + height);
+
+    for(let i = x; i <= x + width; i++){
+        xArray[i] = false;
+    }
+    for(let i = y; i <= y + height; i++){
+        yArray[i] = false;
+    }
 
     //random color parameters
     let r = Math.floor(Math.random() * 255);
