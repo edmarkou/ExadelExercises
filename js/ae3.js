@@ -4,7 +4,7 @@ const canvas = document.getElementById('myCanvas');
 
 let coordinates = [];
 
-// coordinates { 1, 2, 3, 4,....,150} for each x storing its own y coordinate array, creating a two dimentional array
+// creating two dimentional array for coordinates, each x has its own y.
 for(let i = 0; i <= 150; i++){
     let yArray = [];
     for(let j = 0; j <= 60; j++){
