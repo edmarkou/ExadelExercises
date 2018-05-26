@@ -34,17 +34,18 @@ addRectangle.addEventListener('click', ()=>{
         }
         else
             x = false;
-    }while(x === false); // checks if y and x coordinates isn't occupied already by a rectangle
-    //while(y === false || x === false);
-    console.log("x:" + x + " y:" + y + " width:" + width + " height:" + height); // for debugging purposes,
-                                                                                     // to see if all integers are generated as expected
+    }while(x === false);
 
+    console.log("x:" + x + " y:" + y + " width:" + width + " height:" + height); // for debugging purposes,
+                                                                                 // to see if all integers are generated as expected
+
+    //fills in all of the coordinates that the rectangle has occupied to false
     for(let i = x/10; i <= (x + width)/10 ; i++){
 
         for(let j = y/10; j <= (y + height)/10; j++){
             coordinates[i][j] = false;
         }
-
+        // checks if the whole x's y coordinates are false
         let xArrayFull = true;
         for(let k = 0; k < 61; k++){
             if(coordinates[i][k] !== false) {
@@ -53,10 +54,9 @@ addRectangle.addEventListener('click', ()=>{
             }
         }
         if(xArrayFull)
-            coordinates[i] = false;
-        console.log("coordinates: " + i);
+            coordinates[i] = false;         // if it is, makes the x coordinate with no y left false
     }
-    console.log(coordinates);
+    console.log(coordinates); //for debugging
 
 
 
