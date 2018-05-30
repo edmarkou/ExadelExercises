@@ -1,133 +1,65 @@
 const addRectangle = document.getElementById('addRectangle');
 const fillCanvas = document.getElementById('fillCanvas');
 const canvas = document.getElementById('myCanvas');
-
-let coordinates = [];
-
-// creating two dimentional array for coordinates, each x has its own y.
-for(let i = 0; i <= 150; i++){
-    let yArray = [];
-    for(let j = 0; j <= 60; j++){
-        yArray[j] = 10*j;
-    }
-    coordinates[i] = yArray;
-}
+const ctx = canvas.getContext('2d');
+let blockedCoords = [];
 
 addRectangle.addEventListener('click', ()=>{
-    let ctx = canvas.getContext('2d');
-    let x;
-    let y;
-    let width;
-    let height;
-    //generating random parameters for rectangle
+    let goodToGo = false;
     do {
-        x = Math.floor(Math.random() * coordinates.length);
-        y = coordinates[x][Math.floor(Math.random() * 61)];
-        if(coordinates[x] !== false && y !== false) {
-            x = x * 10;
-            do {
-                width = Math.floor(Math.floor(Math.random() * (1500 - x) + 10) / 10) * 10;
-                height = Math.floor(Math.floor(Math.random() * (600 - y) + 10) / 10) * 10;
-            }while(coordinates[x/10+width/10][y/10] === false ||
-            coordinates[x/10][y/10+height/10] === false ||
-            coordinates[x/10+width/10][y/10+height/10] === false);
-        }
-        else
-            x = false;
-    }while(x === false);
+        let x = Math.floor(Math.random() * 150) * 10;
+        let y = Math.floor(Math.random() * 60) * 10;
+        let width = Math.floor(Math.random() * (150 - x / 10) + 1) * 10;
+        let height = Math.floor(Math.random() * (60 - y / 10) + 1) * 10;
+        if(blockedCoords.length === 0){
+            //random color parameters
+            let r = Math.floor(Math.random() * 255);
+            let g = Math.floor(Math.random() * 255);
+            let b = Math.floor(Math.random() * 200);
 
-    console.log("x:" + x + " y:" + y + " width:" + width + " height:" + height); // for debugging purposes,
-                                                                                 // to see if all integers are generated as expected
-
-    //fills in all of the coordinates that the rectangle has occupied to false
-    for(let i = x/10; i <= (x + width)/10 ; i++){
-
-        for(let j = y/10; j <= (y + height)/10; j++){
-            coordinates[i][j] = false;
-        }
-        // checks if the whole x's y coordinates are false
-        let xArrayFull = true;
-        for(let k = 0; k < 61; k++){
-            if(coordinates[i][k] !== false) {
-                xArrayFull = false;
-                break;
+            //start drawing the rectangle
+            ctx.fillStyle = 'rgba('+r+', '+g+', '+b+', 1)';
+            ctx.fillRect(x, y, width, height);
+            blockedCoords.push([x, y, width, height]);
+            break;
+        }else {
+            for (let i = 0; i < blockedCoords.length; i++) {
+                if(rect_collision(x, y, width, height, blockedCoords[i][0], blockedCoords[i][1], blockedCoords[i][2], blockedCoords[i][3])){
+                    goodToGo = false;
+                    break;
+                }else {
+                    goodToGo = true;
+                }
             }
         }
-        if(xArrayFull)
-            coordinates[i] = false;         // if it is, makes the x coordinate with no y left false
-    }
-    console.log(coordinates); //for debugging
+        if(goodToGo){
+            let r = Math.floor(Math.random() * 255);
+            let g = Math.floor(Math.random() * 255);
+            let b = Math.floor(Math.random() * 200);
 
-
-
-    //random color parameters
-    let r = Math.floor(Math.random() * 255);
-    let g = Math.floor(Math.random() * 255);
-    let b = Math.floor(Math.random() * 200);
-
-    //start drawing the rectangle
-    ctx.fillStyle = 'rgba('+r+', '+g+', '+b+', 1)';
-    ctx.fillRect(x, y, width, height);
-
+            //start drawing the rectangle
+            ctx.fillStyle = 'rgba('+r+', '+g+', '+b+', 1)';
+            ctx.fillRect(x, y, width, height);
+            blockedCoords.push([x, y, width, height]);
+        }
+    }while(goodToGo === false)
+    console.log(blockedCoords);
 });
 
 fillCanvas.addEventListener('click', ()=>{
-    do{let ctx = canvas.getContext('2d');
-        let x;
-        let y;
-        let width;
-        let height;
-        //generating random parameters for rectangle
-        do {
-            x = Math.floor(Math.random() * coordinates.length);
-            y = coordinates[x][Math.floor(Math.random() * 61)];
-            if(coordinates[x] !== false && y !== false) {
-                x = x * 10;
-                do {
-                    width = Math.floor(Math.floor(Math.random() * (1500 - x) + 10) / 10) * 10;
-                    height = Math.floor(Math.floor(Math.random() * (600 - y) + 10) / 10) * 10;
-                }while(coordinates[x/10+width/10][y/10] === false ||
-                coordinates[x/10][y/10+height/10] === false ||
-                coordinates[x/10+width/10][y/10+height/10] === false);
-            }
-            else
-                x = false;
-        }while(x === false);
-
-        console.log("x:" + x + " y:" + y + " width:" + width + " height:" + height); // for debugging purposes,
-                                                                                     // to see if all integers are generated as expected
-
-        //fills in all of the coordinates that the rectangle has occupied to false
-        for(let i = x/10; i <= (x + width)/10 ; i++){
-
-            for(let j = y/10; j <= (y + height)/10; j++){
-                coordinates[i][j] = false;
-            }
-            // checks if the whole x's y coordinates are false
-            let xArrayFull = true;
-            for(let k = 0; k < 61; k++){
-                if(coordinates[i][k] !== false) {
-                    xArrayFull = false;
-                    break;
-                }
-            }
-            if(xArrayFull)
-                coordinates[i] = false;         // if it is, makes the x coordinate with no y left false
-        }
-        console.log(coordinates); //for debugging
-
-
-
-        //random color parameters
-        let r = Math.floor(Math.random() * 255);
-        let g = Math.floor(Math.random() * 255);
-        let b = Math.floor(Math.random() * 200);
-
-        //start drawing the rectangle
-        ctx.fillStyle = 'rgba('+r+', '+g+', '+b+', 1)';
-        ctx.fillRect(x, y, width, height);
-    }while(coordinates[0] !== false)
 
 });
 
+rect_collision = function(x1, y1, width1, height1, x2, y2, width2, height2) {
+    let bottom1, bottom2, left1, left2, right1, right2, top1, top2;
+    left1 = x1 - width1;
+    right1 = x1 + width1;
+    top1 = y1 - height1;
+    bottom1 = y1 + height1;
+    left2 = x2 - width2;
+    right2 = x2 + width2;
+    top2 = y2 - height2;
+    bottom2 = y2 + height2;
+    return !(left1 > right2 || left2 > right1 || top1 > bottom2 || top2 > bottom1);
+};
 
